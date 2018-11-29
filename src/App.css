@@ -22,6 +22,15 @@
   color: #61dafb;
 }
 
+button {
+  padding: 10px;
+  margin: 10px;
+}
+
+.canvas-container {
+  border: solid 1px #282c34; 
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
