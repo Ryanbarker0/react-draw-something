@@ -29,6 +29,8 @@ class Home extends Component {
                 />
                 </div>
                 <button onClick={() => {this.setState({"savedCanvas": this.saveableCanvas.getSaveData()})}}>Send To Friend</button>
+                {/* <CanvasDraw disabled ref={canvasDraw => (this.loadableCanvas = canvasDraw)} /> */}
+
             </div>
         )
     }
