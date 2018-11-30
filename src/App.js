@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom'
 import './App.css';
+import NavBar from './components/NavBar'
 
 import Home from './components/Home'
 import Login from './components/Login'
@@ -21,10 +22,18 @@ class App extends Component {
     this.props.history.push('/guest/play')
   }
 
+  navigateLogin = () => {
+    this.props.history.push('/login')
+  }
+
+  navigateSignup = () => {
+    this.props.history.push('/signup')
+  }
+
   render() {
     return (
         <div className="App">
-        
+        <NavBar navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup}/>    
         <Switch >
           <React.Fragment>
             <Route exact path="/" component={routerProps => <Home navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} {...routerProps}/>} />

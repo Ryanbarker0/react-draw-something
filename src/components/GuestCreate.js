@@ -2,6 +2,9 @@ import React from 'react'
 import CanvasDraw from 'react-canvas-draw'
 import ColorPalette from './ColorPalette'
 
+import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css'
+
 
 export default class GuestCreate extends React.Component {
 
@@ -47,17 +50,28 @@ export default class GuestCreate extends React.Component {
         return(
             <div>
                 <h2>Draw: {this.state.word}</h2>
-                <ColorPalette changeColor={this.changeColor}/>
-                <CanvasDraw 
-                    ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
-                    brushRadius={this.state.radius}
-                    lazyRadius={this.state.lazyRadius}
-                    brushColor={this.state.color}
-                    canvasWidth={this.state.width}
-                    canvasHeight={this.state.height}
-                    hideGrid={this.state.hideGrid} 
-                />
-                <button onClick={() => this.saveCanvasToDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
+                <div className='color-palette-slider'>
+                    <ColorPalette changeColor={this.changeColor}/>
+                    <div className='slider'>
+                        <Slider min={1} max={15} defaultValue={this.state.radius} value={this.state.radius} onChange={ event => this.setState({ radius: event })} />
+                    </div>
+                </div>
+                <div className='canvas-content'>
+                    <CanvasDraw 
+                        ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
+                        brushRadius={this.state.radius}
+                        lazyRadius={this.state.lazyRadius}
+                        brushColor={this.state.color}
+                        canvasWidth={this.state.width}
+                        canvasHeight={this.state.height}
+                        hideGrid={this.state.hideGrid} 
+                    />
+                    <button onClick={() => this.saveCanvasToDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
+                        <br />
+                    <button onClick={() => this.saveableCanvas.clear()}>Clear</button>
+                        <br />
+                    <button onClick={() => this.saveableCanvas.undo()}>Undo</button>
+                </div> 
             </div>
         )
     }
