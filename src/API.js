@@ -15,18 +15,6 @@ class API {
             },
         }).then(resp => resp.json())
     }
-
-    createGuestGame = gameObj => 
-        fetch('http://localhost:3001/api/v1/guest_games', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(gameObj)
-        }).then(resp => resp.json())
-
-    getGuestGame = () => 
-        fetch('http://localhost:3001/api/v1/guest_games')
-            .then(resp => resp.json())
-
 }
 
 export default API
