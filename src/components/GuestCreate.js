@@ -1,11 +1,22 @@
 import React from 'react'
 import CanvasDraw from 'react-canvas-draw'
-import API from '../API'
+import ColorPalette from './ColorPalette'
+
 
 export default class GuestCreate extends React.Component {
 
     state = {
+        lazyRadius: 1,
+        hideGrid: false,
+        radius: 4,
+        color: "#46403E",
+        width: 400,
+        height: 400,
         word: ''
+    }
+
+    changeColor = color => {
+        this.setState({ color })
     }
 
     getRandomWord = () => {
@@ -36,8 +47,15 @@ export default class GuestCreate extends React.Component {
         return(
             <div>
                 <h2>Draw: {this.state.word}</h2>
+                <ColorPalette changeColor={this.changeColor}/>
                 <CanvasDraw 
                     ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
+                    brushRadius={this.state.radius}
+                    lazyRadius={this.state.lazyRadius}
+                    brushColor={this.state.color}
+                    canvasWidth={this.state.width}
+                    canvasHeight={this.state.height}
+                    hideGrid={this.state.hideGrid} 
                 />
                 <button onClick={() => this.saveCanvasToDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
             </div>
