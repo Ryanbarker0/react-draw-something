@@ -10,6 +10,7 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import UserDraw from './components/UserDraw'
+import UserPlay from './components/UserPlay'
 import GuestCreate from './components/GuestCreate'
 import GuestPlay from './components/GuestPlay'
 import API from './API'
@@ -47,6 +48,10 @@ class App extends Component {
     this.props.history.push('/user/draw')
   }
 
+  navigateUserPlay = () => {
+    this.props.history.push('/user/play')
+  }
+
   navigateLogin = () => {
     this.props.history.push('/login')
   }
@@ -79,6 +84,7 @@ class App extends Component {
             <Route exact path="/login" component={routerProps => <Login login={login} returnToHome={this.returnToHome} {...routerProps} />} />
             <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} {...routerProps} />} />
             <Route exact path="/user/draw" component={routerProps => <UserDraw userId={id} navigateUserDraw={this.navigateUserDraw} {...routerProps} />} />
+            <Route exact path="/user/play" component={routerProps => <UserPlay userId={id} navigateUserPlay={this.navigateUserPlay} {...routerProps} />} />
             <Route exact path="/guest/create" component={routerProps => <GuestCreate {...routerProps}/>} />
             <Route exact path="/guest/play" component={routerProps => <GuestPlay {...routerProps}/>} />
           </React.Fragment>

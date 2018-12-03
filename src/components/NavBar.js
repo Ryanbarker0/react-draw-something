@@ -30,7 +30,7 @@ class NavBar extends React.Component {
               </NavItem>
               { username &&
                 <NavItem>
-                    <NavLink to="/">My Games</NavLink>
+                    <NavLink to="/user/play">My Games</NavLink>
                 </NavItem>
               }
               {/* <NavItem>
