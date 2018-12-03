@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom'
 import './App.css';
-import NavBar from './components/NavBar'
+import 'font-awesome/css/font-awesome.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
 
+import NavBar from './components/NavBar'
 import Home from './components/Home'
 import Login from './components/Login'
 import GuestCreate from './components/GuestCreate'

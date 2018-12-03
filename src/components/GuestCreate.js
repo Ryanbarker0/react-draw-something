@@ -51,9 +51,9 @@ export default class GuestCreate extends React.Component {
             <div>
                 <h2>Draw: {this.state.word}</h2>
                 <div className='color-palette-slider'>
-                    <ColorPalette changeColor={this.changeColor}/>
+                    <ColorPalette changeColor={this.changeColor} />
                     <div className='slider'>
-                        <Slider min={1} max={15} defaultValue={this.state.radius} value={this.state.radius} onChange={ event => this.setState({ radius: event })} />
+                        <Slider min={1} max={15} defaultValue={this.state.radius} value={this.state.radius} onChange={event => this.setState({ radius: event })} />
                     </div>
                 </div>
                 <div className='canvas-content'>
@@ -71,8 +71,8 @@ export default class GuestCreate extends React.Component {
                     <button onClick={() => this.saveableCanvas.clear()}>Clear</button>
                         <br />
                     <button onClick={() => this.saveableCanvas.undo()}>Undo</button>
-                </div> 
-            </div>
+                </div>
+                </div>
         )
     }
 }
