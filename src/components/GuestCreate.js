@@ -39,6 +39,7 @@ export default class GuestCreate extends React.Component {
     saveCanvasToDatabase = (word, canvas) => {
         const guestGame = {name: word, 'canvas': canvas}
         this.createGuestGame(guestGame)
+        window.location.reload()
     }
 
     componentDidMount() {

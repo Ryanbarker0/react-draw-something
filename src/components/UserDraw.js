@@ -95,17 +95,28 @@ class UserDraw extends Component {
 
     createGameInDatabase = async (word, canvas) => {
         await this.saveCanvasToDatabase(word, canvas)
-        }
+    }
+
+    getDropDownOptions = () => {
+        const options = []
+        this.state.users.map(user => options.push({
+            id: user.id,
+            value: user.username,
+            label: user.username
+        }))
+        return options
+    }
 
     componentDidMount() {
         this.getUsers()
-        .then(users => this.setState({ 
+        .then(async users => await this.setState({ 
         word: this.getRandomWord(),
         users: users
         }))
     }
 
     render() {
+
         return(
             <div>
                 <h2>Draw: {this.state.word}</h2>
@@ -115,6 +126,7 @@ class UserDraw extends Component {
                         <Slider min={1} max={15} defaultValue={this.state.canvas.radius} value={this.state.canvas.radius} onChange={event => this.setState( { canvas: {...this.state.canvas, radius: event } })} />
                     </div>
                 </div>
+                <Select options={this.getDropDownOptions()} />
                 <div className='canvas-content'>
                     <CanvasDraw 
                         ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
