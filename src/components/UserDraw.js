@@ -23,7 +23,7 @@ class UserDraw extends Component {
             artist: false
         },
         users: [],
-        target_user_id: undefined
+        target_user_id: 2
     }
 
     // Functions for changing CanvasDraw tools
@@ -31,15 +31,13 @@ class UserDraw extends Component {
         this.setState({ canvas: {...this.state.canvas, color } })
     }
 
-    saveCanvasToDatabase = (word, canvas) => {
-        const userGame = {name: word, 'canvas': canvas}
-        this.createGame(userGame)
-        .then(game => this.setState({
-            game: {...this.state.game, 
-            game_id: game.id
-        }
-        })) 
-
+    saveCanvasToDatabase = async (word, canvas) => {
+        const userGame = {word: word, 'canvas': canvas}
+        await this.createGame(userGame)
+            .then(game => (
+                this.createUserGameForCurrentUser(game.id),
+                setTimeout(this.createUserGameForTargetUser(game.id), 500)
+            ))
     }
     // End
 
@@ -56,12 +54,14 @@ class UserDraw extends Component {
         fetch('http://localhost:3001/api/v1/users')
             .then(resp => resp.json())
 
-    createGame = canvasObj =>
-        fetch('http://localhost:3001/api/v1/games', {
+    createGame = async canvasObj => {
+        const response = await fetch('http://localhost:3001/api/v1/games', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(canvasObj)
-        }).then(resp => resp.json())
+        })
+        return response.json()
+    }
 
     createUserGame = gameObj => 
     fetch('http://localhost:3001/api/v1/user_games', {
@@ -71,34 +71,38 @@ class UserDraw extends Component {
     }).then(resp => resp.json())
     // End
 
-    createUserGameForCurrentUser = () => {
+    createUserGameForCurrentUser = async gameId => {
         const newGame = {
+            user_game:{
             user_id: this.props.userId,
-            game_id: this.state.game_id,
+            game_id: gameId,
             artist: true
+            }
         }
-        this.createUserGame(newGame)
+        await this.createUserGame(newGame)
     }
 
-    createUserGameForTargetUser = () => {
+    createUserGameForTargetUser = gameId => {
         const newGame = {
+            user_game:{
             user_id: this.state.target_user_id,
-            game_id: this.state.game_id,
+            game_id: gameId,
             artist: false
+            }
         }
         this.createUserGame(newGame)
     }
 
-    createGameInDatabase = (word, canvas) => {
-        this.saveCanvasToDatabase(word, canvas)
-        this.createUserGameForCurrentUser()
-        this.createUserGameForTargetUser()
-    }
+    createGameInDatabase = async (word, canvas) => {
+        await this.saveCanvasToDatabase(word, canvas)
+        }
 
     componentDidMount() {
         this.getUsers()
-        .then(users => this.setState({ word: this.getRandomWord(),
-         users: users}))
+        .then(users => this.setState({ 
+        word: this.getRandomWord(),
+        users: users
+        }))
     }
 
     render() {
