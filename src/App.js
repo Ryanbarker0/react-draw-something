@@ -9,6 +9,7 @@ import NavBar from './components/NavBar'
 import Home from './components/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
+import UserDraw from './components/UserDraw'
 import GuestCreate from './components/GuestCreate'
 import GuestPlay from './components/GuestPlay'
 import API from './API'
@@ -16,12 +17,13 @@ import API from './API'
 class App extends Component {
 
   state = {
+    id: undefined,
     username: ''
   }
 
   login = user => {
     localStorage.setItem('token', user.token)
-    this.setState({ username: user.username })
+    this.setState({ id: user.id, username: user.username })
   }
 
   logout = () => {
@@ -39,6 +41,10 @@ class App extends Component {
 
   navigateGuestPlay = () => {
     this.props.history.push('/guest/play')
+  }
+
+  navigateUserDraw = () => {
+    this.props.history.push('/user/draw')
   }
 
   navigateLogin = () => {
@@ -63,15 +69,16 @@ class App extends Component {
 
   render() {
     const { login, logout } = this
-    const { username } = this.state
+    const { username, id } = this.state
     return (
         <div className="App">
         <NavBar navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup} username={username} logout={logout}/>    
         <Switch >
           <React.Fragment>
-            <Route exact path="/" component={routerProps => <Home username={username} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} {...routerProps}/>} />
+            <Route exact path="/" component={routerProps => <Home username={username} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} navigateUserDraw={this.navigateUserDraw} {...routerProps}/>} />
             <Route exact path="/login" component={routerProps => <Login login={login} returnToHome={this.returnToHome} {...routerProps} />} />
             <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} {...routerProps} />} />
+            <Route exact path="/user/draw" component={routerProps => <UserDraw userId={id} navigateUserDraw={this.navigateUserDraw} {...routerProps} />} />
             <Route exact path="/guest/create" component={routerProps => <GuestCreate {...routerProps}/>} />
             <Route exact path="/guest/play" component={routerProps => <GuestPlay {...routerProps}/>} />
           </React.Fragment>
