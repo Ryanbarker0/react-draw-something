@@ -8,6 +8,7 @@ import 'mdbreact/dist/css/mdb.css';
 import NavBar from './components/NavBar'
 import Home from './components/Home'
 import Login from './components/Login'
+import Signup from './components/Signup'
 import GuestCreate from './components/GuestCreate'
 import GuestPlay from './components/GuestPlay'
 
@@ -41,6 +42,7 @@ class App extends Component {
           <React.Fragment>
             <Route exact path="/" component={routerProps => <Home navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} {...routerProps}/>} />
             <Route exact path="/login" component={routerProps => <Login returnToHome={this.returnToHome} {...routerProps} />} />
+            <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} {...routerProps} />} />
             <Route exact path="/guest/create" component={routerProps => <GuestCreate {...routerProps}/>} />
             <Route exact path="/guest/play" component={routerProps => <GuestPlay {...routerProps}/>} />
           </React.Fragment>
