@@ -31,9 +31,9 @@ class Login extends Component {
 
         return (
             <div>
-            <input type="text" label='Username' value={username} onChange={handleChange} name='username'/>
+            <input type="text" label='Username' value={username} onChange={handleChange} name='username' placeholder='Username..'/>
                 <br />
-            <input type='password' label='Password' value={password} onChange={handleChange} name='password' />
+            <input type='password' label='Password' value={password} onChange={handleChange} name='password' placeholder='Password..'/>
                 <br />
                 <button onClick={handleSubmit}>
                     Login

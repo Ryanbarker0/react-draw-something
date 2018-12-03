@@ -28,6 +28,11 @@ class NavBar extends React.Component {
               <NavItem>
                 <NavLink to="/">Home</NavLink>
               </NavItem>
+              { username &&
+                <NavItem>
+                    <NavLink to="/">My Games</NavLink>
+                </NavItem>
+              }
               {/* <NavItem>
                 <Dropdown>
                   <DropdownToggle nav caret>
