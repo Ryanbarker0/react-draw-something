@@ -1,7 +1,7 @@
 import React, { Component } from 'react' 
 import CanvasDraw from 'react-canvas-draw'
 import ColorPalette from './ColorPalette'
-
+import Select from 'react-select'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 
@@ -73,10 +73,10 @@ class UserDraw extends Component {
 
     createUserGameForCurrentUser = async gameId => {
         const newGame = {
-            user_game:{
-            user_id: this.props.userId,
-            game_id: gameId,
-            artist: true
+                user_game:{
+                user_id: this.props.userId,
+                game_id: gameId,
+                artist: true
             }
         }
         await this.createUserGame(newGame)
@@ -84,10 +84,10 @@ class UserDraw extends Component {
 
     createUserGameForTargetUser = gameId => {
         const newGame = {
-            user_game:{
-            user_id: this.state.target_user_id,
-            game_id: gameId,
-            artist: false
+                user_game:{
+                user_id: this.state.target_user_id,
+                game_id: gameId,
+                artist: false
             }
         }
         this.createUserGame(newGame)
