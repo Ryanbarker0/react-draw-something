@@ -55,9 +55,6 @@ class UserDraw extends Component {
     getUsers = () =>
         fetch('http://localhost:3001/api/v1/users')
             .then(resp => resp.json())
-            .then(users => this.setState({
-                users: {users}
-            }))
 
     createGame = canvasObj =>
         fetch('http://localhost:3001/api/v1/games', {
@@ -99,15 +96,15 @@ class UserDraw extends Component {
     }
 
     componentDidMount() {
-        this.setState({ word: this.getRandomWord() })
         this.getUsers()
+        .then(users => this.setState({ word: this.getRandomWord(),
+         users: users}))
     }
 
     render() {
         return(
             <div>
                 <h2>Draw: {this.state.word}</h2>
-                <p>{this.state.users[0]}</p>
                 <div className='color-palette-slider'>
                     <ColorPalette changeColor={this.changeColor} />
                     <div className='slider'>
