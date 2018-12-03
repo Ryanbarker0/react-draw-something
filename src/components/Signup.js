@@ -31,10 +31,10 @@ class Signup extends Component {
             password_confirmation: this.state.password_confirmation
         }
     this.createUser(newUser)
+    this.props.returnToHome()
     }
     
     render () {
-
         return (
          <div>
          <h2>Sign Up</h2>

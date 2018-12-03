@@ -9,6 +9,7 @@ class NavBar extends React.Component {
   toggleCollapse = this.setState({ isOpen: !this.state.isOpen });
 
   render() {
+      const { username, logout } = this.props
     return (
 
       <Navbar color="indigo" dark expand="md">
@@ -41,6 +42,14 @@ class NavBar extends React.Component {
                 </Dropdown>
               </NavItem> */}
             </NavbarNav>
+
+            { username ?
+            <NavbarNav right>
+                <NavItem>
+                <NavLink to='/' onClick={logout}>Logout</NavLink>
+                </NavItem> 
+            </NavbarNav>
+            :
             <NavbarNav right>
               <NavItem>
                     <NavLink to='/login'>Login</NavLink>
@@ -49,6 +58,8 @@ class NavBar extends React.Component {
                     <NavLink to='/signup'>Sign Up</NavLink>
               </NavItem>
             </NavbarNav>
+            }
+
           </Collapse>
       </Navbar>
     );

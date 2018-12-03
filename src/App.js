@@ -11,8 +11,23 @@ import Login from './components/Login'
 import Signup from './components/Signup'
 import GuestCreate from './components/GuestCreate'
 import GuestPlay from './components/GuestPlay'
+import API from './API'
 
 class App extends Component {
+
+  state = {
+    username: ''
+  }
+
+  login = user => {
+    localStorage.setItem('token', user.token)
+    this.setState({ username: user.username })
+  }
+
+  logout = () => {
+    localStorage.removeItem('token')
+    this.setState({ username: '' })
+  }
 
   returnToHome = () => {
     this.props.history.push('/')
@@ -34,14 +49,28 @@ class App extends Component {
     this.props.history.push('/signup')
   }
 
+  componentDidMount() {
+    API.validate()
+      .then(data => {
+        if (data.error) {
+          this.logout()
+        } else {
+          this.login(data)
+          this.props.history.push('/home')
+        }
+      })
+  }
+
   render() {
+    const { login, logout } = this
+    const { username } = this.state
     return (
         <div className="App">
-        <NavBar navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup}/>    
+        <NavBar navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup} username={username} logout={logout}/>    
         <Switch >
           <React.Fragment>
-            <Route exact path="/" component={routerProps => <Home navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} {...routerProps}/>} />
-            <Route exact path="/login" component={routerProps => <Login returnToHome={this.returnToHome} {...routerProps} />} />
+            <Route exact path="/" component={routerProps => <Home username={username} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} {...routerProps}/>} />
+            <Route exact path="/login" component={routerProps => <Login login={login} returnToHome={this.returnToHome} {...routerProps} />} />
             <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} {...routerProps} />} />
             <Route exact path="/guest/create" component={routerProps => <GuestCreate {...routerProps}/>} />
             <Route exact path="/guest/play" component={routerProps => <GuestPlay {...routerProps}/>} />

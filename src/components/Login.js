@@ -1,23 +1,46 @@
-import React from 'react';
+import React, { Component } from 'react';
+import API from '../API'
 
-const Login = props => {
+class Login extends Component {
 
-    
-    return (
-        <div>
-        <h2>Login</h2>
-        <form>
-            <input type='text' placeholder='Username..' />
-            <br />
-            <input type='password' placeholder='Password..' />
-            <br />
-            <input type='Submit' value='Login' />
-        </form>
-        <br />
-        <button onClick={props.returnToHome} >Back To Home</button>
-        </div>
-    )
+    state = {
+        username: '',
+        password: ''
+    }
 
+    handleSubmit = () => {
+        const { login, history } = this.props
+        const user = this.state
+        API.login(user)
+            .then(data => {
+                if (data.error) {
+                    alert('Incorrect')
+                } else {
+                    login(data)
+                    history.push('/home')
+                }
+            })
+    }
+
+    handleChange = event =>
+        this.setState({ [event.target.name]: event.target.value })
+
+    render() {
+        const { username, password } = this.state
+        const { handleChange, handleSubmit } = this
+
+        return (
+            <div>
+            <input type="text" label='Username' value={username} onChange={handleChange} name='username'/>
+                <br />
+            <input type='password' label='Password' value={password} onChange={handleChange} name='password' />
+                <br />
+                <button onClick={handleSubmit}>
+                    Login
+        </button>
+            </div>
+        )
+    }
 }
 
 export default Login
