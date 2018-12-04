@@ -3,13 +3,13 @@ import React from 'react'
 class MyGames extends React.Component {
 
     state = {
-        userGames: [],
+        games: [],
         opponents: []
     }
 
     // Fetches all the games.
     getGames = () => {
-        return fetch('http://localhost:3001/api/v1/user_games')
+        return fetch('http://localhost:3001/api/v1/games')
             .then(response => response.json())
     }
 
@@ -60,30 +60,35 @@ class MyGames extends React.Component {
         allGames.flatMap(games => games.filter(game => game.artist))
    
 
+    // componentDidMount() {
+    //     const { getSpecificUser } = this
+    //     const { userId } = this.props
+    //     this.getGames()
+    //         .then(games => {
+    //             const filteredGames = this.filterGames(games)
+    //             const gameIds = this.getGameIds(filteredGames)
+    //             const allGames = this.getAllGames(games, gameIds)
+    //             const opponentGames = this.getOpponentGames(allGames)
+    //             const array = []
+    //             const oppObj = []
+    //             opponentGames.forEach(game => {
+    //                 getSpecificUser(game.user_id).then(user => array.push(user))
+    //                 setTimeout(array.forEach(user => oppObj.push(
+    //                     {
+    //                     user: user.username,
+    //                     game_obj: allGames.find(game => game.user_id === user.id)
+    //                     }
+    //                 ), 5000)
+    //                 )}
+    //             )
+    //             this.setState({ userGames: filteredGames, opponents: array, opponentGames: oppObj })
+    //         }
+    //     )
+    // }
+
     componentDidMount() {
-        const { getSpecificUser } = this
-        const { userId } = this.props
         this.getGames()
-            .then(games => {
-                const filteredGames = this.filterGames(games)
-                const gameIds = this.getGameIds(filteredGames)
-                const allGames = this.getAllGames(games, gameIds)
-                const opponentGames = this.getOpponentGames(allGames)
-                const array = []
-                const oppObj = []
-                opponentGames.forEach(game => {
-                    getSpecificUser(game.user_id).then(user => array.push(user))
-                    setTimeout(array.forEach(user => oppObj.push(
-                        {
-                        user: user.username,
-                        game_obj: allGames.find(game => game.user_id === user.id)
-                        }
-                    ), 5000)
-                    )}
-                )
-                this.setState({ userGames: filteredGames, opponents: array, opponentGames: oppObj })
-            }
-        )
+        .then(games => this.setState({ games: games}))
     }
 
 
@@ -92,7 +97,8 @@ class MyGames extends React.Component {
             <div className='user-games-container' >
                 My Games Page
                 <ul>
-                {this.state.userGames.map((game) => <li id={game.id} onClick={event => this.playSelectedGame(event)}> {game.lives} </li>)}
+                GAMES HERE
+                {/* {this.state.userGames.map((game) => <li id={game.id} onClick={event => this.playSelectedGame(event)}> {game.lives} </li>)} */}
                 </ul>
             </div>
         )    

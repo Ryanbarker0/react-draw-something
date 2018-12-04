@@ -37,7 +37,7 @@ class UserDraw extends Component {
         if (!target_user_id) {
             alert("Please Select A User To Play Against")
         } else {
-            const userGame = { word: word, 'canvas': canvas, artist_id: userId}
+            const userGame = { word: word, 'canvas': canvas, artist_id: userId }
         await this.createGame(userGame)
             .then(game => (
                 this.createUserGameForCurrentUser(game.id),
