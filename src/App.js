@@ -9,6 +9,7 @@ import NavBar from './components/NavBar'
 import Home from './components/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
+import Profile from './components/Profile'
 import UserDraw from './components/UserDraw'
 import MyGames from './components/MyGames'
 import UserPlay from './components/UserPlay'
@@ -67,6 +68,10 @@ class App extends Component {
   navigateSignup = () => {
     this.props.history.push('/signup')
   }
+  
+  navigateProfile = () => {
+    this.props.history.push('/profile')
+  }
 
   updatePlayGameObject = object => {
     this.setState({ playGameObject: object })
@@ -98,7 +103,7 @@ class App extends Component {
     const { username, id } = this.state
     return (
         <div className="App">
-        <NavBar navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup} navigateMyGames={this.navigateMyGames} username={username} logout={logout}/>    
+        <NavBar navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup} navigateMyGames={this.navigateMyGames} username={username} logout={logout} navigateProfile={this.navigateProfile}/>    
         <Switch >
           <React.Fragment>
             <Route exact path="/" component={routerProps => <Home username={username} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} navigateUserDraw={this.navigateUserDraw} {...routerProps}/>} />
@@ -110,6 +115,14 @@ class App extends Component {
               ) : (
               <MyGames navigateUserPlay={this.navigateUserPlay} userId={id} {...routerProps} updatePlayGameObject={this.updatePlayGameObject} /> )
               )} />
+            
+            <Route exact path="/profile" render={routerProps => (
+              !username ? (
+                <Redirect to="/" />
+              ) : (
+              <Profile userId={id} {...routerProps} /> )
+              )} />
+            
             <Route exact path="/user/play" render={routerProps => (
               !username ? (
                 <Redirect to="/" />

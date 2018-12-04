@@ -53,6 +53,9 @@ class NavBar extends React.Component {
                 <NavItem>
                 <NavLink to='/' onClick={logout}>Logout</NavLink>
                 </NavItem> 
+                <NavItem>
+                <NavLink to='/profile'>Profile</NavLink>
+                </NavItem> 
             </NavbarNav>
             :
             <NavbarNav right>
