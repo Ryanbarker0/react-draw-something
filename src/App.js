@@ -77,7 +77,7 @@ class App extends Component {
           <React.Fragment>
             <Route exact path="/" component={routerProps => <Home username={username} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} navigateUserDraw={this.navigateUserDraw} {...routerProps}/>} />
             <Route exact path="/login" component={routerProps => <Login login={login} returnToHome={this.returnToHome} {...routerProps} />} />
-            <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} {...routerProps} />} />
+            <Route exact path="/signup" component={routerProps => <Signup navigateLogin={this.navigateLogin} {...routerProps} />} />
             <Route exact path="/user/draw" component={routerProps => <UserDraw userId={id} navigateUserDraw={this.navigateUserDraw} {...routerProps} />} />
             <Route exact path="/guest/create" component={routerProps => <GuestCreate {...routerProps}/>} />
             <Route exact path="/guest/play" component={routerProps => <GuestPlay {...routerProps}/>} />

@@ -32,7 +32,7 @@
 
 button {
   padding: 10px;
-  margin: 10px;
+  margin: 20px;
 }
 
 .slider {
@@ -54,6 +54,10 @@ button {
 
 .canvas-container {
   border: solid 1px #282c34; 
+}
+
+.dropdown {
+  width: 20rem;
 }
 
 @keyframes App-logo-spin {
