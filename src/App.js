@@ -21,12 +21,14 @@ class App extends Component {
   state = {
     id: undefined,
     username: '',
-    playGameObject: undefined
+    playGameObject: undefined,
+    targetUserId: undefined,
+    isNewGame: true 
   }
 
   login = user => {
     localStorage.setItem('token', user.token)
-    this.setState({ id: user.id, username: user.username })
+    this.setState({ id: user.id, username: user.username, targetUserId: undefined, isNewGame: true })
   }
 
   logout = () => {
@@ -68,7 +70,14 @@ class App extends Component {
 
   updatePlayGameObject = object => {
     this.setState({ playGameObject: object })
-    console.log('updated')
+  }
+
+  updateTargetUserId = userId => {
+    this.setState({ targetUserId: userId})
+  }
+
+  updateIsNewGame = bool => {
+    this.setState({ isNewGame: bool })
   }
 
   componentDidMount() {
@@ -81,6 +90,7 @@ class App extends Component {
           this.props.history.push('/home')
         }
       })
+    
   }
 
   render() {
@@ -93,15 +103,24 @@ class App extends Component {
           <React.Fragment>
             <Route exact path="/" component={routerProps => <Home username={username} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} navigateUserDraw={this.navigateUserDraw} {...routerProps}/>} />
             <Route exact path="/login" component={routerProps => <Login login={login} returnToHome={this.returnToHome} {...routerProps} />} />
-            <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} {...routerProps} />} />
-            <Route exact path="/mygames" component={routerProps => <MyGames navigateUserPlay={this.navigateUserPlay} userId={id} {...routerProps} updatePlayGameObject={this.updatePlayGameObject}/>} />
-            <Route exact path="/user/play" component={routerProps => <UserPlay userId={id} {...routerProps} playGameObject={this.state.playGameObject} />} />
-            <Route exact path="/signup" component={routerProps => <Signup navigateLogin={this.navigateLogin} {...routerProps} />} />
+            <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} navigateLogin={this.navigateLogin} {...routerProps} />} />
+            <Route exact path="/mygames" render={routerProps => (
+              !username ? (
+                <Redirect to="/" />
+              ) : (
+              <MyGames navigateUserPlay={this.navigateUserPlay} userId={id} {...routerProps} updatePlayGameObject={this.updatePlayGameObject} /> )
+              )} />
+            <Route exact path="/user/play" render={routerProps => (
+              !username ? (
+                <Redirect to="/" />
+              ) : (
+              <UserPlay userId={id} playGameObject={this.state.playGameObject} isNewGame={this.state.isNewGame} updateTargetUserId={this.updateTargetUserId} updateIsNewGame={this.updateIsNewGame} {...routerProps} /> )
+            )} />
             <Route exact path="/user/draw" render={routerProps => (
                 !username ? (
                 <Redirect to="/" /> 
                 ) : (
-                <UserDraw userId={id} navigateUserDraw={this.navigateUserDraw} {...routerProps} /> )
+                <UserDraw userId={id} navigateUserDraw={this.navigateUserDraw} isNewGame={this.state.isNewGame} targetUserId={this.state.targetUserId}  {...routerProps} /> )
             )} />
             <Route exact path="/guest/create" component={routerProps => <GuestCreate {...routerProps}/>} />
             <Route exact path="/guest/play" component={routerProps => <GuestPlay {...routerProps}/>} />
