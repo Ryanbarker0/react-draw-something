@@ -17,7 +17,7 @@ class Login extends Component {
                     alert('Incorrect')
                 } else {
                     login(data)
-                    history.push('/home')
+                    history.push('/')
                 }
             })
     }

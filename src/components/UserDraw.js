@@ -23,7 +23,7 @@ class UserDraw extends Component {
             artist: false
         },
         users: [],
-        target_user_id: 2
+        target_user_id: undefined
     }
 
     // Functions for changing CanvasDraw tools
@@ -32,12 +32,16 @@ class UserDraw extends Component {
     }
 
     saveCanvasToDatabase = async (word, canvas) => {
+        if (!this.state.target_user_id) {
+            alert("Please Select A User To Play Against")
+        } else {
         const userGame = {word: word, 'canvas': canvas}
         await this.createGame(userGame)
             .then(game => (
                 this.createUserGameForCurrentUser(game.id),
                 setTimeout(this.createUserGameForTargetUser(game.id), 500)
             ))
+        }
     }
     // End
 
@@ -115,6 +119,12 @@ class UserDraw extends Component {
         }))
     }
 
+    handleSelection = event => {
+        this.setState({
+            target_user_id: event.id
+        })
+    }
+
     render() {
 
         return(
@@ -126,7 +136,10 @@ class UserDraw extends Component {
                         <Slider min={1} max={15} defaultValue={this.state.canvas.radius} value={this.state.canvas.radius} onChange={event => this.setState( { canvas: {...this.state.canvas, radius: event } })} />
                     </div>
                 </div>
-                <Select options={this.getDropDownOptions()} />
+                <div className='dropdown'>
+                <h5>Choose Another User To Challenge</h5>
+                <Select options={this.getDropDownOptions()} onChange={event => this.handleSelection(event)}/>
+                </div>
                 <div className='canvas-content'>
                     <CanvasDraw 
                         ref={canvasDraw => (this.saveableCanvas = canvasDraw)}

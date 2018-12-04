@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, withRouter, Redirect } from 'react-router-dom'
 import './App.css';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
@@ -94,9 +94,15 @@ class App extends Component {
             <Route exact path="/" component={routerProps => <Home username={username} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} navigateUserDraw={this.navigateUserDraw} {...routerProps}/>} />
             <Route exact path="/login" component={routerProps => <Login login={login} returnToHome={this.returnToHome} {...routerProps} />} />
             <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} {...routerProps} />} />
-            <Route exact path="/user/draw" component={routerProps => <UserDraw userId={id} navigateUserDraw={this.navigateUserDraw} {...routerProps} />} />
             <Route exact path="/mygames" component={routerProps => <MyGames navigateUserPlay={this.navigateUserPlay} userId={id} {...routerProps} updatePlayGameObject={this.updatePlayGameObject}/>} />
             <Route exact path="/user/play" component={routerProps => <UserPlay userId={id} {...routerProps} playGameObject={this.state.playGameObject} />} />
+            <Route exact path="/signup" component={routerProps => <Signup navigateLogin={this.navigateLogin} {...routerProps} />} />
+            <Route exact path="/user/draw" render={routerProps => (
+                !username ? (
+                <Redirect to="/" /> 
+                ) : (
+                <UserDraw userId={id} navigateUserDraw={this.navigateUserDraw} {...routerProps} /> )
+            )} />
             <Route exact path="/guest/create" component={routerProps => <GuestCreate {...routerProps}/>} />
             <Route exact path="/guest/play" component={routerProps => <GuestPlay {...routerProps}/>} />
           </React.Fragment>
