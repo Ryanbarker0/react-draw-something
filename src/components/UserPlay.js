@@ -36,7 +36,7 @@ class UserPlay extends React.Component {
     // Checks the game for a correct answer. Lose a life if wrong, create a game if right.
     checkForCorrectAnswer = event => {
         event.preventDefault()
-        if (this.state.answer.toLowerCase() === this.state.currentGame.name.toLowerCase()) {
+        if (this.state.answer.toLowerCase() === this.state.currentGame.word.toLowerCase()) {
             console.log('correct')
             this.gameWon()
         } else {

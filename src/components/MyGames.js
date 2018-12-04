@@ -19,7 +19,6 @@ class MyGames extends React.Component {
     }
 
     // Selects the game for the user to play.
-    // !!!! Need to link an onClick event somewhere !!!!
     playSelectedGame = event => {
         const foundGame = this.state.userGames.find(game => game.id === parseInt(event.target.id))
         this.props.updatePlayGameObject(foundGame)
