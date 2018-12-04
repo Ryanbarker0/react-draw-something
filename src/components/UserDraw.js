@@ -137,6 +137,7 @@ class UserDraw extends Component {
                     </div>
                 </div>
                 <div className='dropdown'>
+                <h5>Choose Another User To Challenge</h5>
                 <Select options={this.getDropDownOptions()} onChange={event => this.handleSelection(event)}/>
                 </div>
                 <div className='canvas-content'>
