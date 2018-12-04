@@ -8,17 +8,62 @@ class UserPlay extends React.Component {
         answer: ''
     }
 
-    getGame = gameId => 
-        fetch(`http://localhost:3001/api/v1/games/${gameId}`)
+    getGame = gameId => {
+        return fetch(`http://localhost:3001/api/v1/games/${gameId}`)
             .then(response => response.json())
+    }
+
+// isNewGame={this.state.isNewGame} targetUserId={this.state.targetUserId}
+
+    getUserGameForTargetUser = gameId => {
+        const { updateUserGameInDbForArtist } = this
+        const { updateTargetUserId } = this.props
+        return fetch(`http://localhost:3001/api/v1/user_games`)
+        .then(resp => resp.json())
+        .then(games => {
+            const foundGame = games.find(game => (game.game_id === gameId) && (game.artist))
+            updateUserGameInDbForArtist(foundGame)
+            updateTargetUserId(foundGame.user_id)
+        })
+    }
+
+    updateUserGameInDbForGuesser = currentUserGame => {
+        return fetch(`http://localhost:3001/api/v1/user_games/${currentUserGame.id}`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                user_game: {
+                user_id: currentUserGame.user_id,
+                game_id: currentUserGame.game_id,
+                artist: true,
+                lives: currentUserGame.lives
+                }
+            })
+        })
+    }
+
+    updateUserGameInDbForArtist = artistUserGame => {
+        return fetch(`http://localhost:3001/api/v1/user_games/${artistUserGame.id}`, {
+            method: 'PATCH', 
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                user_game: {
+                user_id: artistUserGame.user_id,
+                game_id: artistUserGame.game_id,
+                artist: false,
+                lives: artistUserGame.lives
+                }
+            })
+        })
+    } 
 
     loadCurrentGame = () => {
         this.getGame(this.props.playGameObject.game_id)
             .then(game => this.setState({ currentGame: game }))
-    }
-
-    componentDidMount = () => {
-        this.loadCurrentGame()
     }
 
     currentGameObjects = game => {
@@ -38,6 +83,9 @@ class UserPlay extends React.Component {
         event.preventDefault()
         if (this.state.answer.toLowerCase() === this.state.currentGame.word.toLowerCase()) {
             console.log('correct')
+            this.getUserGameForTargetUser(this.props.playGameObject.game_id)
+            this.props.updateIsNewGame(false)
+            this.updateUserGameInDbForGuesser(this.props.playGameObject)
             this.gameWon()
         } else {
             console.log('wrong')
@@ -49,7 +97,7 @@ class UserPlay extends React.Component {
     loseLife = () => {
         if (this.state.currentGame.lives >= 1) {
             const copyOfCurrentGame = {...this.state.currentGame}
-            this.setState({...copyOfCurrentGame, lives: copyOfCurrentGame.lives -= 1})
+            this.setState({ currentGame: {...this.state.currentGame, lives: copyOfCurrentGame.lives -= 1}})
         } else {
             this.gameOver()
         }
@@ -58,7 +106,7 @@ class UserPlay extends React.Component {
     // Game over scenario after all lives lost.
     gameOver = () => {
         //Game Over! Better luck next time.
-        this.props.history.push('/user/play')
+        this.props.history.push('/')
     }
 
     // Switch roles after user wins a game.
@@ -67,10 +115,17 @@ class UserPlay extends React.Component {
         this.props.history.push('/user/draw')
     }
 
+
+    componentDidMount = () => {
+        this.loadCurrentGame()
+    }
+
     render () {
         return(
             <div>
-                User Play Page
+            { this.state.currentGame &&
+                <h4>User Play Page - Lives: {this.state.currentGame.lives}</h4>
+            }
                 <CanvasDraw disabled ref={canvasDraw => (this.loadableCanvas = canvasDraw)} />
                 <button onClick={() => {this.loadableCanvas.loadSaveData(this.state.currentGame['canvas'])}}>Start Game
                 </button>

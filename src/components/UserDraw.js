@@ -32,14 +32,16 @@ class UserDraw extends Component {
     }
 
     saveCanvasToDatabase = async (word, canvas) => {
-        if (!this.state.target_user_id) {
+        const { target_user_id } = this.state
+        const { userId } = this.props
+        if (!target_user_id) {
             alert("Please Select A User To Play Against")
         } else {
-        const userGame = {word: word, 'canvas': canvas}
+            const userGame = { word: word, 'canvas': canvas, artist_id: userId}
         await this.createGame(userGame)
             .then(game => (
                 this.createUserGameForCurrentUser(game.id),
-                setTimeout(this.createUserGameForTargetUser(game.id), 500)
+                setTimeout(this.createUserGameForTargetUser(game.id), 5000)
             ))
         }
     }
@@ -126,7 +128,7 @@ class UserDraw extends Component {
     }
 
     render() {
-
+        const { isNewGame } = this.props
         return(
             <div>
                 <h2>Draw: {this.state.word}</h2>
@@ -136,10 +138,13 @@ class UserDraw extends Component {
                         <Slider min={1} max={15} defaultValue={this.state.canvas.radius} value={this.state.canvas.radius} onChange={event => this.setState( { canvas: {...this.state.canvas, radius: event } })} />
                     </div>
                 </div>
+                { isNewGame &&
                 <div className='dropdown'>
                 <h5>Choose Another User To Challenge</h5>
                 <Select options={this.getDropDownOptions()} onChange={event => this.handleSelection(event)}/>
                 </div>
+                }
+                
                 <div className='canvas-content'>
                     <CanvasDraw 
                         ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
