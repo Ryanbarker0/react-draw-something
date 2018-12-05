@@ -29,7 +29,9 @@ class App extends Component {
     targetUserId: undefined,
     isNewGame: true,
     game: undefined,
-    words: words
+    words: words,
+    userProfileToEdit: undefined,
+    defaultProfileImage: 'https://react.semantic-ui.com/images/avatar/large/matthew.png'
   }
 
   login = user => {
@@ -97,6 +99,14 @@ class App extends Component {
   updateGameInState = game => {
     this.setState({ game })
   }
+  
+  updateProfileImage = (newImage) => {
+    this.setState({ defaultProfileImage: newImage })
+  }
+
+  updateUserProfileToEdit = user => {
+    this.setState({ userProfileToEdit: user })
+  }
 
   componentDidMount() {
     API.validate()
@@ -112,8 +122,8 @@ class App extends Component {
   }
 
   render() {
-    const { login, logout } = this
-    const { username, id } = this.state
+    const { login, logout, updateProfileImage, updateUserProfileToEdit } = this
+    const { username, id, userProfileToEdit, defaultProfileImage } = this.state
     return (
         <div>
         <NavBar pencilLogo={pencilLogo} navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup} navigateMyGames={this.navigateMyGames} username={username} logout={logout} navigateProfile={this.navigateProfile}/>    
@@ -133,13 +143,13 @@ class App extends Component {
               !username ? (
                 <Redirect to="/" />
               ) : (
-              <Profile userId={id} {...routerProps} /> )
+              <Profile userId={id} updateUserProfileToEdit={updateUserProfileToEdit} defaultProfileImage={defaultProfileImage} navigateEditProfile={this.navigateEditProfile} {...routerProps} /> )
               )} />
             <Route exact path="/profile/edit" render={routerProps => (
               !username ? (
                 <Redirect to="/" />
               ) : (
-              <EditProfile userId={id} {...routerProps} /> )
+              <EditProfile userProfileToEdit={userProfileToEdit} updateProfileImage={updateProfileImage} {...routerProps} /> )
               )} />
             
             <Route exact path="/user/play" render={routerProps => (
