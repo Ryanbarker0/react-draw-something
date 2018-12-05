@@ -30,19 +30,22 @@ class MyGames extends Component {
         this.props.navigateUserPlay()
     }
 
+    capitalizeFirstLetter = (string) =>
+        string.charAt(0).toUpperCase() + string.slice(1);
+
     componentDidMount() {
         this.getGames()
         .then(games => this.setState({ games: games}))
     }
 
     render () {
-        const { filterForPlayableGames } = this
+        const { filterForPlayableGames, capitalizeFirstLetter } = this
         return(
             <div className='user-games-container' >
                 <div>
                 { filterForPlayableGames().length > 0 ?
                 
-                    this.filterForOpponents().map((user) => <p id={user.id} onClick={event => this.playSelectedGame(event.target.id)}>Game with: {user.username.toUpperCase()}</p> )
+                    this.filterForOpponents().map((user) => <p id={user.id} onClick={event => this.playSelectedGame(event.target.id)}>Game with: {capitalizeFirstLetter(user.username)}</p> )
                     :
                     <p>You Don't Currently Have Any Active Games</p>
                 }
