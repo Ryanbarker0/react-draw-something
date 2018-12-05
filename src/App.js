@@ -5,6 +5,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 
+import words from './words'
 import NavBar from './components/NavBar'
 import Home from './components/Home'
 import Login from './components/Login'
@@ -23,7 +24,9 @@ class App extends Component {
     username: '',
     playGameObject: undefined,
     targetUserId: undefined,
-    isNewGame: true 
+    isNewGame: true,
+    game: undefined,
+    words: words
   }
 
   login = user => {
@@ -80,6 +83,10 @@ class App extends Component {
     this.setState({ isNewGame: bool })
   }
 
+  updateGameInState = game => {
+    this.setState({ game })
+  }
+
   componentDidMount() {
     API.validate()
       .then(data => {
@@ -97,7 +104,7 @@ class App extends Component {
     const { login, logout } = this
     const { username, id } = this.state
     return (
-        <div className="App">
+        <div>
         <NavBar navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup} navigateMyGames={this.navigateMyGames} username={username} logout={logout}/>    
         <Switch >
           <React.Fragment>
@@ -114,15 +121,15 @@ class App extends Component {
               !username ? (
                 <Redirect to="/" />
               ) : (
-              <UserPlay userId={id} playGameObject={this.state.playGameObject} isNewGame={this.state.isNewGame} updateTargetUserId={this.updateTargetUserId} updateIsNewGame={this.updateIsNewGame} {...routerProps} /> )
+              <UserPlay userId={id} playGameObject={this.state.playGameObject} isNewGame={this.state.isNewGame} updateGameInState={this.updateGameInState} updateTargetUserId={this.updateTargetUserId} updateIsNewGame={this.updateIsNewGame} {...routerProps} /> )
             )} />
             <Route exact path="/user/draw" render={routerProps => (
                 !username ? (
                 <Redirect to="/" /> 
                 ) : (
-                <UserDraw userId={id} navigateUserDraw={this.navigateUserDraw} isNewGame={this.state.isNewGame} targetUserId={this.state.targetUserId}  {...routerProps} /> )
+                <UserDraw userId={id} words={this.state.words} navigateUserDraw={this.navigateUserDraw} isNewGame={this.state.isNewGame} targetUserId={this.state.targetUserId} game={this.state.game}  {...routerProps} /> )
             )} />
-            <Route exact path="/guest/create" component={routerProps => <GuestCreate {...routerProps}/>} />
+            <Route exact path="/guest/create" component={routerProps => <GuestCreate words={this.state.words} {...routerProps}/>} />
             <Route exact path="/guest/play" component={routerProps => <GuestPlay {...routerProps}/>} />
           </React.Fragment>
           </Switch>

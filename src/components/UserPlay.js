@@ -13,19 +13,11 @@ class UserPlay extends React.Component {
             .then(response => response.json())
     }
 
-// isNewGame={this.state.isNewGame} targetUserId={this.state.targetUserId}
-
-    getUserGameForTargetUser = gameId => {
-        const { updateUserGameInDbForArtist } = this
-        const { updateTargetUserId } = this.props
-        return fetch(`http://localhost:3001/api/v1/user_games`)
-        .then(resp => resp.json())
-        .then(games => {
-            const foundGame = games.find(game => (game.game_id === gameId) && (game.artist))
-            updateUserGameInDbForArtist(foundGame)
-            updateTargetUserId(foundGame.user_id)
-        })
-    }
+    getUserGameForTargetUser = () => 
+        this.state.currentGame.user_games.find(userGame => userGame.id === this.state.currentGame.artist_id)
+    
+    getUserGameForCurrentUser = () =>
+        this.state.currentGame.user_games.find(userGame => userGame.id === this.props.userId)
 
     updateUserGameInDbForGuesser = currentUserGame => {
         return fetch(`http://localhost:3001/api/v1/user_games/${currentUserGame.id}`, {
@@ -61,9 +53,23 @@ class UserPlay extends React.Component {
         })
     } 
 
-    loadCurrentGame = () => {
-        this.getGame(this.props.playGameObject.game_id)
-            .then(game => this.setState({ currentGame: game }))
+    // BUILD PATCH FOR WHEN USER CORRECTLY GUESSES
+    updateGameInDb = () => {
+        const { currentGame } = this.state
+        const gameId = currentGame.id
+        return fetch(`http://localhost:3001/api/v1/games/${gameId}`, {
+            method: 'PATCH',
+            headers: { "Content-Type":"application/json" },
+            body: JSON.stringify({
+                game: {
+                artist_id: this.props.userId,
+                canvas: '',
+                win_streak: currentGame.win_streak += 1,
+                word: '',
+                lives: currentGame.lives
+                }
+            })
+        })
     }
 
     currentGameObjects = game => {
@@ -80,14 +86,24 @@ class UserPlay extends React.Component {
 
     // Checks the game for a correct answer. Lose a life if wrong, create a game if right.
     checkForCorrectAnswer = event => {
+        const { getUserGameForCurrentUser, getUserGameForTargetUser, updateUserGameInDbForArtist, updateUserGameInDbForGuesser, gameWon, updateGameInDb } = this 
+        const { updateIsNewGame, updateGameInState } = this.props
         event.preventDefault()
+
         if (this.state.answer.toLowerCase() === this.state.currentGame.word.toLowerCase()) {
+
             console.log('correct')
-            this.getUserGameForTargetUser(this.props.playGameObject.game_id)
-            this.props.updateIsNewGame(false)
-            this.updateUserGameInDbForGuesser(this.props.playGameObject)
-            this.gameWon()
+            const foundOpponent = getUserGameForTargetUser()
+            const foundUser = getUserGameForCurrentUser()
+            updateUserGameInDbForArtist(foundOpponent)
+            updateUserGameInDbForGuesser(foundUser)
+            updateIsNewGame(false)
+            updateGameInState(this.state.currentGame)
+            updateGameInDb()
+            gameWon()
+
         } else {
+
             console.log('wrong')
             this.loseLife()
         }    
@@ -117,7 +133,7 @@ class UserPlay extends React.Component {
 
 
     componentDidMount = () => {
-        this.loadCurrentGame()
+        this.setState({currentGame: this.props.playGameObject})
     }
 
     render () {
