@@ -10,6 +10,7 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import Profile from './components/Profile'
+import EditProfile from './components/EditProfile'
 import UserDraw from './components/UserDraw'
 import MyGames from './components/MyGames'
 import UserPlay from './components/UserPlay'
@@ -73,6 +74,10 @@ class App extends Component {
     this.props.history.push('/profile')
   }
 
+  navigateEditProfile = () => {
+    this.props.history.push('/profile/edit')
+  }
+
   updatePlayGameObject = object => {
     this.setState({ playGameObject: object })
   }
@@ -121,6 +126,12 @@ class App extends Component {
                 <Redirect to="/" />
               ) : (
               <Profile userId={id} {...routerProps} /> )
+              )} />
+            <Route exact path="/profile/edit" render={routerProps => (
+              !username ? (
+                <Redirect to="/" />
+              ) : (
+              <EditProfile userId={id} {...routerProps} /> )
               )} />
             
             <Route exact path="/user/play" render={routerProps => (
