@@ -7,11 +7,12 @@ const ColorPalette = props => {
         props.changeColor(hex)
     }
 
-
     return (
         <div>
-            <SwatchesPicker 
-            onChangeComplete={handleColorChange}/>
+            <SwatchesPicker
+                height={440}
+                width={390}
+                onChangeComplete={handleColorChange}/>
         </div>
     )
 }

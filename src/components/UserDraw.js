@@ -23,7 +23,8 @@ class UserDraw extends Component {
             artist: false
         },
         users: [],
-        target_user_id: undefined
+        target_user_id: undefined,
+        words: this.props.words
     }
 
     // Functions for changing CanvasDraw tools
@@ -49,9 +50,7 @@ class UserDraw extends Component {
 
     // Word to be guessed
     getRandomWord = () => {
-        const words = ['Rabbit', 'Cat', 'Dog', 'Camel', 'Tree', 'House', 'Car', 'Bicycle', 'Skiing', 'Dignity', 'Tears', 'Terminator',
-    'Midwife', 'Computer', 'Glasses', 'Elephant', 'Pikachu', 'Toilet Sign', 'Stop Sign', 'Beer Bottle', 'Sushi', 'Treasure', 'Thief',
-    'Lightsaber', 'Hotdog', 'Lawnmower']
+        const words = this.props.words
         return words[Math.floor(Math.random() * words.length)]
     } // End
 
@@ -103,6 +102,68 @@ class UserDraw extends Component {
         await this.saveCanvasToDatabase(word, canvas)
     }
 
+    updateGameInDb = (word, canvas) => {
+        const { game } = this.props
+        return fetch(`http://localhost:3001/api/v1/games/${game.id}`, {
+            method: 'PATCH',
+            headers: { "Content-Type":"application/json"},
+            body: JSON.stringify({
+                game: {
+                    artist_id: game.artist_id,
+                    word: word,
+                    canvas: canvas,
+                    win_streak: game.win_streak,
+                    lives: game.lives,
+                }
+            })
+        })
+    }
+// below 2 functions are a work in progress
+    // still need to create successful patch on drawing submission
+    // ensure the correct parties are getting true/false swap for artist
+    updateUserGameForTargetUser = gameObj => {
+        return fetch(`http://localhost:3001/api/v1/user_games/${gameObj.id}`, {
+            method: 'PATCH',
+            headers: { "Content-Type":"application/json"},
+            body: JSON.stringify({
+                user_game: {
+                    user_id: gameObj.user_id,
+                    game_id: this.props.game.id,
+                    artist: true,
+                    lives: gameObj.lives
+                }
+            })
+        })
+    }
+
+    updateUserGameForCurrentUser = gameObj => {
+        return fetch(`http://localhost:3001/api/v1/user_games/${gameObj.id}`, {
+            method: 'PATCH',
+            headers: { "Content-Type":"application/json"},
+            body: JSON.stringify({
+                user_game: {
+                    user_id: gameObj.user_id,
+                    game_id: this.props.game.id,
+                    artist: false,
+                    lives: gameObj.lives
+                }
+            })
+        })
+    }
+
+    updateGameInDatabase = (word, canvas) => {
+        this.updateGameInDb(word, canvas)
+        this.updateUserGameForTargetUser(this.findTargetUserInGame())
+        this.updateUserGameForCurrentUser(this.findCurrentUserInGame())
+    }
+
+    findCurrentUserInGame = () => 
+        this.props.game.users.find(user => user.id === this.props.game.artist_id)
+    
+    findTargetUserInGame = () =>
+        this.props.game.users.find(user => user.id !== this.props.game.artist_id)
+
+
     getDropDownOptions = () => {
         const options = []
         this.state.users.map(user => options.push({
@@ -112,6 +173,9 @@ class UserDraw extends Component {
         }))
         return options
     }
+
+    capitalizeFirstLetter = (string) =>
+        string.charAt(0).toUpperCase() + string.slice(1);
 
     componentDidMount() {
         this.getUsers()
@@ -128,24 +192,24 @@ class UserDraw extends Component {
     }
 
     render() {
-        const { isNewGame } = this.props
+        const { isNewGame, game } = this.props
+        const { capitalizeFirstLetter } = this
         return(
-            <div>
-                <h2>Draw: {this.state.word}</h2>
-                <div className='color-palette-slider'>
-                    <ColorPalette changeColor={this.changeColor} />
-                    <div className='slider'>
-                        <Slider min={1} max={15} defaultValue={this.state.canvas.radius} value={this.state.canvas.radius} onChange={event => this.setState( { canvas: {...this.state.canvas, radius: event } })} />
-                    </div>
-                </div>
-                { isNewGame &&
-                <div className='dropdown'>
-                <h5>Choose Another User To Challenge</h5>
-                <Select options={this.getDropDownOptions()} onChange={event => this.handleSelection(event)}/>
-                </div>
-                }
-                
-                <div className='canvas-content'>
+            <div className='create-container'>
+            <div className='buttons-container'>
+                { isNewGame ?
+                    <button onClick={() => this.createGameInDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
+                    :
+                    <button onClick={() => this.updateGameInDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
+                    }
+                    <button onClick={() => this.saveableCanvas.clear()}>Clear</button>
+                    <button onClick={() => this.saveableCanvas.undo()}>Undo</button>
+            </div>
+
+            <div className='canvas-container'>
+
+                <h2>Draw: {capitalizeFirstLetter(this.state.word)}</h2>
+                <div className='canvas'>
                     <CanvasDraw 
                         ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
                         brushRadius={this.state.canvas.radius}
@@ -155,12 +219,29 @@ class UserDraw extends Component {
                         canvasHeight={this.state.canvas.height}
                         hideGrid={this.state.canvas.hideGrid} 
                     />
-                    <button onClick={() => this.createGameInDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
-                        <br />
-                    <button onClick={() => this.saveableCanvas.clear()}>Clear</button>
-                        <br />
-                    <button onClick={() => this.saveableCanvas.undo()}>Undo</button>
                 </div>
+            </div>
+
+            <div className='slider-container'>
+                <Slider 
+                    min={1} max={15} 
+                    defaultValue={this.state.canvas.radius} 
+                    value={this.state.canvas.radius} 
+                    trackStyle={{ backgroundColor: '#3F51B5' }}
+                    handleStyle={{ border: 'solid 2px #3F51B5' }}
+                    onChange={event => this.setState({ canvas: { ...this.state.canvas, radius: event } })} 
+                />
+            </div>
+
+            <div className='palette-container'>
+                <ColorPalette changeColor={this.changeColor} />
+            </div> 
+                { isNewGame &&
+                <div className='dropdown'>
+                <h5>Choose Another User To Challenge</h5>
+                <Select options={this.getDropDownOptions()} onChange={event => this.handleSelection(event)}/>
+                </div>
+                }
             </div>
         )
     }
