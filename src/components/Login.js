@@ -30,7 +30,7 @@ class Login extends Component {
         const { handleChange, handleSubmit } = this
 
         return (
-            <div>
+            <div className="form-container" >
             <input type="text" label='Username' value={username} onChange={handleChange} name='username' placeholder='Username..'/>
                 <br />
             <input type='password' label='Password' value={password} onChange={handleChange} name='password' placeholder='Password..'/>
