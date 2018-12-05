@@ -1,3 +1,30 @@
+/* Buttons */
+
+.btn-main {
+  width: 150px;
+  font-size: 1.1em;
+  padding: 0.5em;
+  border: none;
+  background-color: #3F51B5;
+  color: #eff2ff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.btn-main:focus {
+    outline:none;
+}
+
+.btn-main:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.btn-main:active {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+/* ================ */
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
@@ -31,52 +58,38 @@
 .create-container {
   display: flex;
   justify-content: center;
+  margin-top: 20px;
 }
 
 /* buttons section */
 .buttons-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 1em 2em;
+  padding: 0 2em;
 }
 
-.buttons-container button {
-  width: 150px;
-  font-size: 1.1em;
-  padding: 0.5em;
-  border: none;
-  background-color: #3F51B5;
-  color: #eff2ff;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-}
-
-.buttons-container button:focus {
-    outline:none;
-}
-
-.buttons-container button:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-}
-
-.buttons-container button:active {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-}
-
-.buttons-container button:nth-child(2) {
+.buttons-container .btn-main:nth-child(2) {
   margin: 2em 0;
 }
 /* ===================== */
 
 /* canvas section */
 .canvas-container {
+  border-radius: 4px;
   padding: 1em 2em;  
+  background-color: #3F51B5;
+  color: #eff2ff;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 10px, rgba(0, 0, 0, 0.16) 0px 2px 5px;
 }
 
 .slider-container {
-  margin-top: 30px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.slider-container h5 {
+  font-size: 1em;
+  font-weight: 500;
 }
 
 .slider {
@@ -88,7 +101,9 @@
 
 /* palette-container */
 .palette-container {
-  padding: 1em 2em;
+  padding: 0 2em;
+  display: flex;
+  /* align-items: center; */
 }
 
 .swatches-picker {
@@ -97,32 +112,35 @@
 
 /* ===================== */
 
+/* Popup */
 
-.canvas-content {
-  float: right;
-  position: relative;
-  right: 35%;
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.color-palette-slider {
-  float: left;
-  position: relative;
-  left: 10%;
+.popup_window {
+  width: 90%;
+  max-width: 400px;
+  height: 50vh;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
 }
 
-.dropdown {
-  width: 20rem;
+.popup_buttons {
+  margin-top: 40px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-ul {
-  list-style-type: none;
-}
+/* ===================== */

@@ -1,6 +1,7 @@
 import React from 'react'
 import CanvasDraw from 'react-canvas-draw'
 import ColorPalette from './ColorPalette'
+import Popup from './Popup'
 
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
@@ -15,7 +16,8 @@ export default class GuestCreate extends React.Component {
         color: "#46403E",
         width: 400,
         height: 400,
-        word: ''
+        word: '',
+        popup: false
     }
 
     changeColor = color => {
@@ -41,22 +43,28 @@ export default class GuestCreate extends React.Component {
     saveCanvasToDatabase = (word, canvas) => {
         const guestGame = {name: word, 'canvas': canvas}
         this.createGuestGame(guestGame)
-        window.location.reload()
+        this.setState({popup: true})
     }
 
     componentDidMount() {
         this.setState({ word: this.getRandomWord() })
     }
 
+    closePopup = () => {
+        this.setState({popup: false})
+    }
+
     render() {
         const { capitalizeFirstLetter } = this
         return(
             <div className='create-container'>
-
+                {
+                    this.state.popup && <Popup closePopup={this.closePopup}/>
+                }
                 <div className='buttons-container'>
-                    <button onClick={() => this.saveCanvasToDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
-                    <button onClick={() => this.saveableCanvas.clear()}>Clear</button>
-                    <button onClick={() => this.saveableCanvas.undo()}>Undo</button>
+                    <button className="btn-main" onClick={() => this.saveCanvasToDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
+                    <button className="btn-main" onClick={() => this.saveableCanvas.clear()}>Clear</button>
+                    <button className="btn-main" onClick={() => this.saveableCanvas.undo()}>Undo</button>
                 </div>
 
                 <div className='canvas-container'>
@@ -76,14 +84,14 @@ export default class GuestCreate extends React.Component {
                     </div>
 
                     <div className='slider-container'>
+                    <h5>Brush Size</h5>
                         <Slider 
                             min={1} max={15} 
                             defaultValue={this.state.radius} 
                             value={this.state.radius} 
-                            trackStyle={{ backgroundColor: '#3F51B5'}}
-                            handleStyle={{border: 'solid 2px #3F51B5'}}
+                            trackStyle={{ backgroundColor: 'rgb(83, 217, 232)'}}
+                            handleStyle={{ border: 'solid 2px rgb(83, 217, 232)', backgroundColor: 'rgb(83, 217, 232)'}}
                             onChange={event => this.setState({ radius: event })} />
-                        <h5>Brush Size</h5>
                     </div>
 
                 </div>

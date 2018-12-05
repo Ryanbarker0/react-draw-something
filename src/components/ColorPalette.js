@@ -12,6 +12,7 @@ const ColorPalette = props => {
             <SwatchesPicker
                 height={440}
                 width={390}
+                overflowY={"hidden"}
                 onChangeComplete={handleColorChange}/>
         </div>
     )
