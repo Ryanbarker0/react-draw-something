@@ -1,12 +1,14 @@
 import React from 'react'
 import CanvasDraw from 'react-canvas-draw'
+import CorrectPopup from './Popup'
 
 export default class GuestPlay extends React.Component {
 
     state = {
         games: [],
         currentGame: undefined,
-        answer: ''
+        answer: '',
+        popup: false
     }
 
     getGuestGame = () => 
@@ -30,9 +32,9 @@ export default class GuestPlay extends React.Component {
     checkForCorrectAnswer = event => {
         event.preventDefault()
         if (this.state.answer.toLowerCase() === this.state.currentGame.name.toLowerCase()) {
-            console.log('correct')
+            this.setState({popup: true, answer: true})
         } else {
-            console.log('wrong')
+            alert('Incorrect! Try Again!')
         }    
     }
 
@@ -49,15 +51,28 @@ export default class GuestPlay extends React.Component {
 
     render() {
         return(
-            <div>
-                <CanvasDraw disabled ref={canvasDraw => (this.loadableCanvas = canvasDraw)} />
-                <button onClick={() => {this.loadableCanvas.loadSaveData(this.state.currentGame['canvas'])}}>Start Game</button>
-                <br />
-                <form onSubmit={this.checkForCorrectAnswer}>
-                    <input placeholder='Type your answer here...' value={this.state.answer} onChange={event => this.handleChange(event)}></input>
-                    <br />
-                    <input type='submit' value='Submit Guess'></input>
-                </form>
+            <div className='create-container'>
+
+            { this.state.popup &&
+                <CorrectPopup />
+            }
+
+                <div className='buttons-container'>
+                    <button className='btn-main' onClick={() => { this.loadableCanvas.loadSaveData(this.state.currentGame['canvas']) }}>Start Game</button>
+
+                </div>
+                <div className='canvas-container'>
+                    <CanvasDraw disabled ref={canvasDraw => (this.loadableCanvas = canvasDraw)} />
+                    <div className='form-container'>
+                        <form onSubmit={this.checkForCorrectAnswer}>
+                            <input className='guess' placeholder='Type your answer here...' value={this.state.answer} onChange={event => this.handleChange(event)}></input>
+                            <div className='form-submit'>
+                            <input className='btn-main' type='submit' value='Submit Guess'></input>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         )
     }

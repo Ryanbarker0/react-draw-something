@@ -62,7 +62,7 @@ export default class GuestCreate extends React.Component {
                     this.state.popup && <Popup closePopup={this.closePopup}/>
                 }
                 <div className='buttons-container'>
-                    <button className="btn-main" onClick={() => this.saveCanvasToDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Save</button>
+                    <button className="btn-main" onClick={() => this.saveCanvasToDatabase(this.state.word, this.saveableCanvas.getSaveData())}>Submit Creation</button>
                     <button className="btn-main" onClick={() => this.saveableCanvas.clear()}>Clear</button>
                     <button className="btn-main" onClick={() => this.saveableCanvas.undo()}>Undo</button>
                 </div>

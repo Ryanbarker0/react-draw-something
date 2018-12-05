@@ -10,7 +10,7 @@ const Popup = (props) => {
                 </div>
             </div>
         </div>
-        )
+    )
 }
 
 export default Popup
