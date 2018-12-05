@@ -1,39 +1,41 @@
-import React from 'react';
+import React from 'react'
 
 class Profile extends React.Component {
 
     state = {
-        user: undefined
+        user: undefined,
+        userProfile: {
+            username: '',
+            first_name: '',
+            last_name: ''
+        },
+        profileImage: ''
     }
 
-    // Finding the relevant users info based on the userId passed in props.
-    getUsers = () => {
-        return fetch('http://localhost:3001/api/v1/users')
-            .then(resp => resp.json())
+    updateInfo = () => {
+        return fetch('http://localhost:3001/api/v1/users', {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                username: this.state.userProfile.username,
+                first_name: this.state.userProfile.first_name,
+                last_name: this.state.userProfile.last_name,
+            })
+        })
+    }
+
+    handleSubmission = event => {
+        event.preventDefault()
+        this.updateInfo()
+        this.props.history.push('/profile')
     }
 
     componentDidMount = () => {
-        this.getUsers()
-            .then(users => {
-                const foundUser = users.find(user => user.id === this.props.userId)
-                this.setState({ user: foundUser })  
-            })
-    }
-    // End
-
-    editInfo = () => {
-        
+        this.setState({ user: this.props.userProfileToEdit })
     }
 
-    // Once info has been edited - use this...
-    submitInfo = () => {
-        return fetch('http://localhost:3001/api/v1/users', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                // finish this part using state.
-            })
-        })
+    componentWillUnmount = () => {
+        this.props.updateProfileImage(this.state.profileImage)
     }
     
     render() {
@@ -41,21 +43,25 @@ class Profile extends React.Component {
         const { user } = this.state
 
         return (
-            <div className='profile-page'>
-            { user &&
-                <div>
-                    <h1>{`${user.username}'s Profile Page`}</h1>
-                    <ul>
-                        <li><img src='https://react.semantic-ui.com/images/avatar/large/matthew.png' alt='profile pic' width='50%'/></li>
-                        <li><strong>Name: </strong>{`${user.first_name} ${user.last_name}`}</li>
-                        <li><strong>Username: </strong>{user.username}</li>
-                    </ul>
-                    <button onClick={this.editInfo}>Edit Information</button>
-                </div>
+            <div>
+            {user &&
+                <form name="update-form" onSubmit={event => this.handleSubmission(event)} >
+                    <input type="text" placeholder={user.username} onChange={event => this.setState({userProfile: {...this.state.userProfile, username: event.target.value} })}/>
+                        <br />
+                    <input type="text" placeholder={user.first_name} onChange={event => this.setState({userProfile: {...this.state.userProfile, first_name: event.target.value} })}/>
+                        <br />
+                    <input type="text" placeholder={user.last_name} onChange={event => this.setState({userProfile: {...this.state.userProfile, last_name: event.target.value} })}/>
+                        <br />
+                    <input type="text" placeholder="Profile Image Url" onChange={event => this.setState({ profileImage: event.target.value })}/>    
+                        <br />
+                        <br/>
+                    <input type="submit" value="Update Info" />
+                </form>
             }
             </div>
-        )
+        )       
     }
-}
+
+} // End of Class
 
 export default Profile
