@@ -5,6 +5,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 
+import pencilLogo from './assets/pencils_2.png'
 import words from './words'
 import NavBar from './components/NavBar'
 import Home from './components/Home'
@@ -33,7 +34,7 @@ class App extends Component {
 
   login = user => {
     localStorage.setItem('token', user.token)
-    this.setState({ id: user.id, username: user.username, targetUserId: undefined, isNewGame: true })
+    this.setState({ id: user.id, username: user.username, targetUserId: '', isNewGame: true })
   }
 
   logout = () => {
@@ -115,10 +116,10 @@ class App extends Component {
     const { username, id } = this.state
     return (
         <div>
-        <NavBar navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup} navigateMyGames={this.navigateMyGames} username={username} logout={logout} navigateProfile={this.navigateProfile}/>    
+        <NavBar pencilLogo={pencilLogo} navigateLogin={this.navigateLogin} navigateSignup={this.navigateSignup} navigateMyGames={this.navigateMyGames} username={username} logout={logout} navigateProfile={this.navigateProfile}/>    
         <Switch >
           <React.Fragment>
-            <Route exact path="/" component={routerProps => <Home username={username} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} navigateUserDraw={this.navigateUserDraw} {...routerProps}/>} />
+            <Route exact path="/" component={routerProps => <Home username={username} pencilLogo={pencilLogo} navigateGuestCreate={this.navigateGuestCreate} navigateGuestPlay={this.navigateGuestPlay} navigateUserDraw={this.navigateUserDraw} {...routerProps}/>} />
             <Route exact path="/login" component={routerProps => <Login login={login} returnToHome={this.returnToHome} {...routerProps} />} />
             <Route exact path="/signup" component={routerProps => <Signup returnToHome={this.returnToHome} navigateLogin={this.navigateLogin} {...routerProps} />} />
             <Route exact path="/mygames" render={routerProps => (

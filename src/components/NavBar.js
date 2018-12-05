@@ -14,7 +14,7 @@ class NavBar extends React.Component {
 
       <Navbar color="indigo" dark expand="md">
           <NavbarBrand>
-            <strong className="white-text">Sketch</strong>
+            <img src={this.props.pencilLogo} width={30}/>
           </NavbarBrand>
           <NavbarToggler
             onClick={this.toggleCollapse}

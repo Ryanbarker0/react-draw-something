@@ -11,9 +11,10 @@ class MyGames extends Component {
             .then(response => response.json())
     }
 
-    filterForPlayableGames = () => 
-        this.state.games.filter(game => game.artist_id !== this.props.userId)
-
+    filterForPlayableGames = () => {
+        const filteredGames = this.state.games.filter(game => game.artist_id !== this.props.userId)
+        return filteredGames.filter(game => game.users.find(user => user.id === this.props.userId))
+    }
 
     filterForOpponents = () => 
         this.filterForPlayableGames().flatMap(game => game.users.filter(user => user.id !== this.props.userId ))

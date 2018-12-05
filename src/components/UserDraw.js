@@ -220,7 +220,7 @@ class UserDraw extends Component {
                         hideGrid={this.state.canvas.hideGrid} 
                     />
                 </div>
-            </div>
+           
 
             <div className='slider-container'>
                 <Slider 
@@ -232,6 +232,7 @@ class UserDraw extends Component {
                     onChange={event => this.setState({ canvas: { ...this.state.canvas, radius: event } })} 
                 />
             </div>
+             </div>
 
             <div className='palette-container'>
                 <ColorPalette changeColor={this.changeColor} />
